@@ -3,7 +3,7 @@ import types from "./types.js";
 export default class Parser {
     constructor(tokens) {
         this.tokens = tokens;
-        console.log(this.parse(this.tokens));
+        console.log(JSON.stringify(this.parse(this.tokens, true)));
     }
 
     // so here's the shit method:
@@ -20,28 +20,45 @@ export default class Parser {
                 return tokens[i];
             };
 
-            let elements = [currentToken().raw];
+            let elements = [];
 
-            if (currentToken().type === types.LPAREN) {
-                const subTokens = [];
+            if (currentToken().type === types.END) {
+                break;
+            } else if (currentToken().type === types.ELEMENT) {
+                elements.push(currentToken().raw);
+            } else if (currentToken().type === types.LPAREN) {
+                let subTokens = [];
+                let balanced = 0;
 
-                while (peekToken() && peekToken().type !== types.RPAREN) {
-                    subTokens.push(nextToken());
+                while (peekToken()) {
+                    if (currentToken().type === types.LPAREN) {
+                        balanced--;
+                    } else if (currentToken().type === types.RPAREN) {
+                        balanced++;
+                    }
+
+                    subTokens.push(currentToken());
+                    nextToken();
+
+                    if (balanced === 0) {
+                        break;
+                    }
                 }
 
-                nextToken();
+                subTokens = subTokens.slice(1, -1);
                 elements = this.parse(subTokens);
+
+                i--;
             }
 
-            let repeat =
-                peekToken() && peekToken().type === types.NUMBER
-                    ? nextToken().raw
-                    : 1;
+            let repeat = 1;
 
-            for (const element of elements) {
-                for (let j = 0; j < repeat; j++) {
-                    equation.push(element);
-                }
+            if (peekToken() && peekToken().type === types.NUMBER) {
+                repeat = nextToken().raw;
+            }
+
+            for (let j = 0; j < repeat; j++) {
+                equation.push(elements);
             }
 
             nextToken();

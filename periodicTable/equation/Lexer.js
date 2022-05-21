@@ -73,5 +73,7 @@ export default class Lexer {
 
             this.nextChar();
         }
+
+        this.addToken(new Token("END", types.END));
     }
 }

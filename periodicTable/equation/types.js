@@ -4,6 +4,7 @@ const types = Object.freeze({
     LPAREN: "LPAREN",
     RPAREN: "RPAREN",
     ELEMENT: "ELEMENT",
+    END: "END",
 });
 
 export default types;
