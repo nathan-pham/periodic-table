@@ -1,8 +1,7 @@
-import { fileURLToPath } from "url";
+import { __dirname } from "./node.js";
+
 import * as path from "path";
 import * as fs from "fs";
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url)).toString();
 
 const importCsv = (filename) => {
     // prettier-ignore

@@ -1,7 +1,9 @@
-import importCsv from "./importCsv";
+import importCsv from "./importCsv.js";
 
-import findBy from "./utils/findBy";
-import getMass from "./utils/getMass";
+import { __dirname } from "./node.js";
+
+import * as path from "path";
+import * as fs from "fs";
 
 // import periodic table (csv)
 // return array of elements
@@ -22,15 +24,27 @@ const importPeriodicTable = (filename) => {
     return elements;
 };
 
-const createUtils = (elements) => {
-    return {
-        findBy: findBy(elements),
-        getMass: getMass(elements),
-    };
+const createUtils = async (elements) => {
+    const utilsDir = "./utils";
+    const modules = await fs
+        .readdirSync(path.join(__dirname, utilsDir))
+        .reduce(async (acc, curr) => {
+            const moduleName = curr.split(".").shift();
+            const module = await import(`${utilsDir}/${curr}`).then(
+                (m) => m.default
+            );
+
+            return {
+                ...(await acc),
+                [moduleName]: module(elements),
+            };
+        }, {});
+
+    return modules;
 };
 
 const elements = importPeriodicTable("./periodicTableData.csv");
-const utils = createUtils(elements);
+const utils = await createUtils(elements);
 
 utils.getMass("NaOH");
 
