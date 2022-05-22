@@ -1,37 +1,21 @@
-const createToken = (element, count = 0) => ({
-    element,
-    count,
-});
+import Lexer from "../equation/Lexer.js";
+import Parser from "../equation/Parser.js";
 
-const parseEquation = (equation) => {
-    const tokens = [];
+import findBy from "./findBy.js";
 
-    let currentPos = 0;
-    let currentChar = equation[currentPos];
+const extract = (equation) => {
+    const lexer = new Lexer(equation);
+    const parser = new Parser(lexer.tokens);
 
-    // let element = "";
-    // let i = 0;
-    // while (i < equation.length) {
-    //     const next = equation[i + 1] || "";
-    //     const isSingle = next === next.toUpperCase();
-
-    //     if (isSingle) {
-    //         tokens.push(equation[i]);
-    //     } else {
-    //         tokens.push(equation.substring(i, i + 2));
-    //         i++;
-    //     }
-
-    //     i++;
-    // }
-
-    console.log(tokens);
-
-    return tokens;
+    return parser.equation.flat(Infinity);
 };
 
 const getMass = (elements) => (equation) => {
-    parseEquation(equation);
+    const masses = extract(equation).map((el) =>
+        parseFloat(findBy(elements)("Symbol", el)["AtomicMass"])
+    );
+
+    return masses.reduce((acc, curr) => acc + curr, 0);
 };
 
 export default getMass;

@@ -3,7 +3,7 @@ import types from "./types.js";
 export default class Parser {
     constructor(tokens) {
         this.tokens = tokens;
-        console.log(JSON.stringify(this.parse(this.tokens, true)));
+        this.equation = this.parse(this.tokens);
     }
 
     // so here's the shit method:

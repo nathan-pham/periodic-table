@@ -46,6 +46,6 @@ const createUtils = async (elements) => {
 const elements = importPeriodicTable("./periodicTableData.csv");
 const utils = await createUtils(elements);
 
-utils.getMass("NaOH");
+console.log(utils.getMass("NaOH"));
 
 // console.log(utils.findBy("Symbol", "H"));
