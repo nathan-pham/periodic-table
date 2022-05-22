@@ -1,5 +1,5 @@
 import * as periodicTable from "./periodicTable/index.js";
+import prompt from "./prompt.js";
 
-console.log(periodicTable.utils.parseExpression("NaOH Na2(Cr2O7)"));
-
-console.log(periodicTable.utils.findBy("Symbol", "H"));
+const expression = await prompt("enter chemical expression to get mass > ");
+console.log(periodicTable.utils.getMass(expression));
